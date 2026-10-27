@@ -2,33 +2,35 @@ package com.example.taskmanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String title;
 
+    @Column(length = 2000)
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Task status;
+    @Builder.Default
+    private Tasckstatus status = Tasckstatus.PENDING;
 
-    @Column(columnDefinition = "integer default 0")
-    private Integer priority;
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer priority = 0;
 
     @Column(name = "due_date")
     private LocalDateTime dueDate;
@@ -41,7 +43,7 @@ public class Task {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Version
@@ -50,10 +52,5 @@ public class Task {
     @PrePersist
     void prePersist() {
         createdAt = LocalDateTime.now();
-
-    }
-
-    @PreUpdate
-    void preUpdate() {
     }
 }
