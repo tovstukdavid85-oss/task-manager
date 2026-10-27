@@ -19,4 +19,4 @@ jobs:
           java-version: "21"
           cache: maven
       - name: Build and test
-        run: ./mvnw --batch-mode clean verify
+        run: bash ./mvnw --batch-mode clean verify
