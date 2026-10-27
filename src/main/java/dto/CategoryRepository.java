@@ -1,18 +1,11 @@
-package dto;
+package com.example.taskmanager.repository;
+
 import com.example.taskmanager.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-public abstract class CategoryRepository extends jpaRepository <Category, Long>{
-    // SELECT FROM categoruies WHERE name = ?
-    public abstract Optional<Category> findByName(String name);
-
-    // SELECT COUNT(*) > FROM Categories WHERE  NAME  = ?
-
-    //
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    Optional<Category> findByName(String name);
+    boolean existsByName(String name);
 }
-
-
