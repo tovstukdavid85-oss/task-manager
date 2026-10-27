@@ -1,0 +1,36 @@
+# Версия формата docker-compose (можно не менять)
+version: '3.8'
+
+# Контейнеры — это "виртуальные компьютеры" внутри твоего компьютера
+services:
+
+  postgres:                              # Имя сервиса (обращаемся по нему)
+    image: postgres:15-alpine            # Какую "операционную систему" ставить
+    # postgres:15 = PostgreSQL версии 15
+    # alpine = минимальный размер (~150 МБ вместо ~1 ГБ)
+
+    container_name: task_manager_db      # Имя контейнера (для удобства)
+
+    ports:
+      - "5432:5432"                      # Порт: твой_компьютер:контейнер
+      # Когда ты заходишь на localhost:5432 → попадаешь в контейнер
+
+    environment:                         # Переменные среды (как пароли)
+      POSTGRES_DB: task_manager          # Имя БД, которая создастся автоматически
+      POSTGRES_USER: postgres            # Логин
+      POSTGRES_PASSWORD: postgres        # Пароль
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # "Флешка" — данные сохраняются
+      # даже после выключения Docker
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      # Каждые 5 секунд проверяем: "База живая?"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# Именованные тома — "внешние жёсткие диски" для Docker
+volumes:
+  pgdata:                                # Данные PostgreSQL

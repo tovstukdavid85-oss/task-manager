@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Это XML-файл — формат данных, как HTML, но для конфигураций -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Версия формата POM (можно не менять) -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ========================================== -->
+    <!-- ИДЕНТИФИКАТОР ПРОЕКТА                      -->
+    <!-- Это "адрес" твоего проекта в мире Java     -->
+    <!-- ========================================== -->
+    <parent>
+        <!-- Spring Boot — "набор всех инструментов" для веб-приложений -->
+        <!-- Подключаем = получаем Spring, Hibernate, Tomcat, и ещё 100 библиотек -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.example</groupId>       <!-- Организация (папка в maven Central) -->
+    <artifactId>task-manager</artifactId> <!-- Имя твоего проекта -->
+    <version>0.0.1-SNAPSHOT</version>     <!-- Версия: SNAPSHOT = "ещё в разработке" -->
+
+    <name>task-manager</name>
+    <description>Простой таск-менеджер</description>
+
+    <!-- ========================================== -->
+    <!-- НАСТРОЙКА JAVA                             -->
+    <!-- ========================================== -->
+    <properties>
+        <!-- Какую версию Java использовать для компиляции -->
+        <java.version>17</java.version>
+    </properties>
+
+    <!-- ========================================== -->
+    <!-- ЗАВИСИМОСТИ (БИБЛИОТЕКИ)                   -->
+    <!-- Каждый <dependency> = одна библиотека       -->
+    <!-- Maven скачает их все автоматически          -->
+    <!-- ========================================== -->
+    <dependencies>
+
+        <!-- 1. SPRING BOOT WEB — делает REST API (HTTP-сервер) -->
+        <!-- Без этого нет контроллеров, нет /api/tasks -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 2. SPRING DATA JPA — работает с базой данных -->
+        <!-- Без этого нет Repository, нет SQL-запросов -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- 3. VALIDATION — проверяет DTO (@NotBlank, @Email) -->
+        <!-- Без этого можно отправить пустой username и получить ошибку на сервере -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- 4. POSTGRESQL — "переводчик" между Java и PostgreSQL -->
+        <!-- Без этого Hibernate не знает КАК говорить с PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>  <!-- runtime = нужен только при запуске, не при компиляции -->
+        </dependency>
+
+        <!-- 5. LOMBOK — генератор кода (getters/setters/конструкторы) -->
+        <!-- Без этого @Data, @Builder, @RequiredArgsConstructor не работают -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>  <!-- optional = не передаётся в продакшен -->
+        </dependency>
+
+        <!-- 6. SWAGGER (springdoc) — документация API в браузере -->
+        <!-- Без этого нет http://localhost:8080/swagger-ui.html -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- 7. ТЕСТЫ — JUnit 5 + Mockito -->
+        <!-- Без этого нет src/test/java/ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>  <!-- test = только для тестов, не в продакшен -->
+        </dependency>
+
+    </dependencies>
+
+    <!-- ========================================== -->
+    <!-- ПЛАГИНЫ (как собирать)                     -->
+    <!-- ========================================== -->
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin -->
+            <!-- Делает: mvn package → task-manager.jar (запускаемый файл) -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Исключаем Lombok из финального JAR (он не нужен в продакшене) -->
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                    <compilerArgs>--enable-preview</compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
