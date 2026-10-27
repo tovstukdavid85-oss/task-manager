@@ -2,16 +2,17 @@ package com.example.taskmanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "categories")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +25,9 @@ public class Category {
     @Column(length = 7)
     private String color;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "created_at", nullable = false)
-    protected LocalDateTime createdAt;
-
-;;
     @PrePersist
     void prePersist() {
         createdAt = LocalDateTime.now();
