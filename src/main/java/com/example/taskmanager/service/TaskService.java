@@ -68,7 +68,7 @@ public class TaskService {
         }
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь не найден: " + request.getUserId()));
-        task.setUser(user);
+        task.setUser((org.apache.catalina.User) user);
 
         if (request.getCategoryId() == null) {
             task.setCategory(null);
@@ -87,7 +87,7 @@ public class TaskService {
                 .status(task.getStatus().name())
                 .priority(task.getPriority())
                 .dueDate(task.getDueDate())
-                .userId(task.getUser().getId())
+                .userId(Long.valueOf(task.getUser().getName()))
                 .username(task.getUser().getUsername())
                 .categoryId(task.getCategory() == null ? null : task.getCategory().getId())
                 .categoryName(task.getCategory() == null ? null : task.getCategory().getName())
